@@ -701,3 +701,30 @@ time_t mutt_date_add_timeout(time_t now, long timeout)
 
   return now + timeout;
 }
+
+
+/**
+ * mutt_date_localtime_r - Converts timep to struct tm expressed in user timezone.
+ * @param timep Time
+ * @retval tm   Broken-down time representation
+ */
+struct tm mutt_date_localtime_r(const time_t *timep)
+{
+  struct tm tm = { 0 };
+  localtime_r(timep, &tm);
+  
+  return tm;
+}
+
+/**
+ * mutt_date_gmtime_r - Converts timep to struct tm expressed in UTC timezone.
+ * @param timep Time
+ * @retval tm   Broken-down time representation
+ */
+struct tm mutt_date_gmtime_r(const time_t *timep)
+{
+  struct tm tm = { 0 };
+  gmtime_r(timep, &tm);
+
+  return tm;
+}

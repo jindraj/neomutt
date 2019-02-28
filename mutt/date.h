@@ -49,4 +49,7 @@ void   mutt_date_normalize_time(struct tm *tm);
 time_t mutt_date_parse_date(const char *s, struct Tz *tz_out);
 time_t mutt_date_parse_imap(const char *s);
 
+struct tm mutt_date_gmtime_r(const time_t *timep);
+struct tm mutt_date_localtime_r(const time_t *timep);
+
 #endif /* MUTT_LIB_DATE_H */
