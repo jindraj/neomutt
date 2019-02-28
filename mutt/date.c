@@ -130,8 +130,7 @@ static const struct Tz TimeZones[] = {
  */
 static time_t compute_tz(time_t g, struct tm *utc)
 {
-  struct tm lt = { 0 };
-  localtime_r(&g, &lt);
+  struct tm lt = mutt_date_localtime_r(&g);
   time_t t;
   int yday;
 
@@ -217,8 +216,7 @@ time_t mutt_date_local_tz(time_t t)
   if (t == 0)
     t = time(NULL);
 
-  struct tm tm = { 0 };
-  gmtime_r(&t, &tm);
+  struct tm tm = mutt_date_gmtime_r(&t);
   return compute_tz(t, &tm);
 }
 
@@ -377,8 +375,7 @@ void mutt_date_normalize_time(struct tm *tm)
 char *mutt_date_make_date(char *buf, size_t buflen)
 {
   time_t t = time(NULL);
-  struct tm tm = { 0 };
-  localtime_r(&t, &tm);
+  struct tm tm = mutt_date_localtime_r(&t);
   time_t tz = mutt_date_local_tz(t);
 
   tz /= 60;
@@ -599,8 +596,7 @@ time_t mutt_date_parse_date(const char *s, struct Tz *tz_out)
  */
 int mutt_date_make_imap(char *buf, size_t buflen, time_t timestamp)
 {
-  struct tm tm = { 0 };
-  localtime_r(&timestamp, &tm);
+  struct tm tm = mutt_date_localtime_r(&timestamp);
   time_t tz = mutt_date_local_tz(timestamp);
 
   tz /= 60;
@@ -623,8 +619,7 @@ int mutt_date_make_imap(char *buf, size_t buflen, time_t timestamp)
  */
 int mutt_date_make_tls(char *buf, size_t buflen, time_t timestamp)
 {
-  struct tm tm = { 0 };
-  gmtime_r(&timestamp, &tm);
+  struct tm tm = mutt_date_gmtime_r(&timestamp);
   return snprintf(buf, buflen, "%s, %d %s %d %02d:%02d:%02d UTC",
                   Weekdays[tm.tm_wday], tm.tm_mday, Months[tm.tm_mon],
                   tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
@@ -701,7 +696,6 @@ time_t mutt_date_add_timeout(time_t now, long timeout)
 
   return now + timeout;
 }
-
 
 /**
  * mutt_date_localtime_r - Converts timep to struct tm expressed in user timezone.

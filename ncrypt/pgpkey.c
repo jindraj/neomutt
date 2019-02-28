@@ -296,8 +296,7 @@ static const char *pgp_entry_fmt(char *buf, size_t buflen, size_t col, int cols,
       }
       *p = 0;
 
-      struct tm tm = { 0 };
-      localtime_r(&key->gen_time, &tm);
+      struct tm tm = mutt_date_localtime_r(&key->gen_time);
 
       if (!do_locales)
         setlocale(LC_TIME, "C");

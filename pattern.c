@@ -401,8 +401,7 @@ static const char *get_date(const char *s, struct tm *t, struct Buffer *err)
 {
   char *p = NULL;
   time_t now = time(NULL);
-  struct tm tm = { 0 };
-  localtime_r(&now, &tm);
+  struct tm tm = mutt_date_localtime_r(&now);
 
   t->tm_mday = strtol(s, &p, 10);
   if (t->tm_mday < 1 || t->tm_mday > 31)
@@ -622,12 +621,12 @@ static bool eat_date(struct Pattern *pat, struct Buffer *s, struct Buffer *err)
 
     if (buf.data[0] == '<')
     {
-      localtime_r(&now, &min);
+      min = mutt_date_localtime_r(&now);
       tm = &min;
     }
     else
     {
-      localtime_r(&now, &max);
+      max = mutt_date_localtime_r(&now);
       tm = &max;
 
       if (buf.data[0] == '=')
@@ -690,7 +689,7 @@ static bool eat_date(struct Pattern *pat, struct Buffer *s, struct Buffer *err)
       { /* save base minimum and set current date, e.g. for "-3d+1d" */
         time_t now = time(NULL);
         memcpy(&base_min, &min, sizeof(base_min));
-        localtime_r(&now, &min);
+        min = mutt_date_localtime_r(&now);
         min.tm_hour = 0;
         min.tm_sec = 0;
         min.tm_min = 0;

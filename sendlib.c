@@ -2479,8 +2479,7 @@ static char *gen_msgid(void)
   if (!fqdn)
     fqdn = NONULL(ShortHostname);
 
-  struct tm tm = { 0 };
-  gmtime_r(&now, &tm);
+  struct tm tm = mutt_date_gmtime_r(&now);
   snprintf(buf, sizeof(buf), "<%d%02d%02d%02d%02d%02d.%s@%s>", tm.tm_year + 1900,
            tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, rndid, fqdn);
   return mutt_str_strdup(buf);
