@@ -671,7 +671,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
         {
           char *is = NULL;
           now = time(NULL);
-          tm = mutt_date_localtime_r(&now);
+          tm = mutt_date_localtime_r(now);
           now -= (op == '(') ? e->received : e->date_sent;
 
           is = (char *) prec;
@@ -809,13 +809,13 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
         *p = 0;
 
         if (op == '[' || op == 'D')
-          tm = mutt_date_localtime_r(&e->date_sent);
+          tm = mutt_date_localtime_r(e->date_sent);
         else if (op == '(')
-          tm = mutt_date_localtime_r(&e->received);
+          tm = mutt_date_localtime_r(e->received);
         else if (op == '<')
         {
           now = time(NULL);
-          tm = mutt_date_localtime_r(&now);
+          tm = mutt_date_localtime_r(now);
         }
         else
         {
@@ -825,7 +825,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
             now -= (e->zhours * 3600 + e->zminutes * 60);
           else
             now += (e->zhours * 3600 + e->zminutes * 60);
-          tm = mutt_date_gmtime_r(&now);
+          tm = mutt_date_gmtime_r(now);
         }
 
         if (!do_locales)

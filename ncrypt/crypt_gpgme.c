@@ -1256,7 +1256,7 @@ static void print_time(time_t t, struct State *s)
 {
   char p[256];
 
-  struct tm tm = mutt_date_localtime_r(&t);
+  struct tm tm = mutt_date_localtime_r(t);
   strftime(p, sizeof(p), nl_langinfo(D_T_FMT), &tm);
   state_puts(p, s);
 }
@@ -2530,7 +2530,7 @@ static int pgp_gpgme_extract_keys(gpgme_data_t keydata, FILE **fp)
       if (len > 8)
         shortid += len - 8;
       tt = subkey->timestamp;
-      struct tm tm = mutt_date_localtime_r(&tt);
+      struct tm tm = mutt_date_localtime_r(tt);
       strftime(date, sizeof(date), "%Y-%m-%d", &tm);
 
       if (!more)
@@ -3483,7 +3483,7 @@ static const char *crypt_format_str(char *buf, size_t buflen, size_t col, int co
         if (key->kobj->subkeys && (key->kobj->subkeys->timestamp > 0))
           tt = key->kobj->subkeys->timestamp;
 
-        tm = mutt_date_localtime_r(&tt);
+        tm = mutt_date_localtime_r(tt);
       }
 
       if (!do_locales)
@@ -4121,7 +4121,7 @@ static void print_key_info(gpgme_key_t key, FILE *fp)
   {
     tt = key->subkeys->timestamp;
 
-    struct tm tm = mutt_date_localtime_r(&tt);
+    struct tm tm = mutt_date_localtime_r(tt);
     strftime(shortbuf, sizeof(shortbuf), nl_langinfo(D_T_FMT), &tm);
     fprintf(fp, "%*s%s\n", KeyInfoPadding[KIP_VALID_FROM],
             _(KeyInfoPrompts[KIP_VALID_FROM]), shortbuf);
@@ -4131,7 +4131,7 @@ static void print_key_info(gpgme_key_t key, FILE *fp)
   {
     tt = key->subkeys->expires;
 
-    struct tm tm = mutt_date_localtime_r(&tt);
+    struct tm tm = mutt_date_localtime_r(tt);
     strftime(shortbuf, sizeof(shortbuf), nl_langinfo(D_T_FMT), &tm);
     fprintf(fp, "%*s%s\n", KeyInfoPadding[KIP_VALID_TO],
             _(KeyInfoPrompts[KIP_VALID_TO]), shortbuf);
@@ -4269,7 +4269,7 @@ static void print_key_info(gpgme_key_t key, FILE *fp)
       {
         tt = subkey->timestamp;
 
-        struct tm tm = mutt_date_localtime_r(&tt);
+        struct tm tm = mutt_date_localtime_r(tt);
         strftime(shortbuf, sizeof(shortbuf), nl_langinfo(D_T_FMT), &tm);
         fprintf(fp, "%*s%s\n", KeyInfoPadding[KIP_VALID_FROM],
                 _(KeyInfoPrompts[KIP_VALID_FROM]), shortbuf);
@@ -4279,7 +4279,7 @@ static void print_key_info(gpgme_key_t key, FILE *fp)
       {
         tt = subkey->expires;
 
-        struct tm tm = mutt_date_localtime_r(&tt);
+        struct tm tm = mutt_date_localtime_r(tt);
         strftime(shortbuf, sizeof(shortbuf), nl_langinfo(D_T_FMT), &tm);
         fprintf(fp, "%*s%s\n", KeyInfoPadding[KIP_VALID_TO],
                 _(KeyInfoPrompts[KIP_VALID_TO]), shortbuf);

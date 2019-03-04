@@ -84,7 +84,7 @@ static const char *timestamp(time_t stamp)
 
   if (stamp != last)
   {
-    struct tm tm = mutt_date_localtime_r(&stamp);
+    struct tm tm = mutt_date_localtime_r(stamp);
     strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
     last = stamp;
   }
@@ -380,7 +380,7 @@ int log_queue_save(FILE *fp)
   struct tm tm = { 0 };
   STAILQ_FOREACH(ll, &LogQueue, entries)
   {
-    tm = mutt_date_localtime_r(&ll->time);
+    tm = mutt_date_localtime_r(ll->time);
     strftime(buf, sizeof(buf), "%H:%M:%S", &tm);
     fprintf(fp, "[%s]<%c> %s", buf, LevelAbbr[ll->level + 3], ll->message);
     if (ll->level <= 0)

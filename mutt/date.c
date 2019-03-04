@@ -130,7 +130,7 @@ static const struct Tz TimeZones[] = {
  */
 static time_t compute_tz(time_t g, struct tm *utc)
 {
-  struct tm lt = mutt_date_localtime_r(&g);
+  struct tm lt = mutt_date_localtime_r(g);
   time_t t;
   int yday;
 
@@ -216,7 +216,7 @@ time_t mutt_date_local_tz(time_t t)
   if (t == 0)
     t = time(NULL);
 
-  struct tm tm = mutt_date_gmtime_r(&t);
+  struct tm tm = mutt_date_gmtime_r(t);
   return compute_tz(t, &tm);
 }
 
@@ -375,7 +375,7 @@ void mutt_date_normalize_time(struct tm *tm)
 char *mutt_date_make_date(char *buf, size_t buflen)
 {
   time_t t = time(NULL);
-  struct tm tm = mutt_date_localtime_r(&t);
+  struct tm tm = mutt_date_localtime_r(t);
   time_t tz = mutt_date_local_tz(t);
 
   tz /= 60;
@@ -596,7 +596,7 @@ time_t mutt_date_parse_date(const char *s, struct Tz *tz_out)
  */
 int mutt_date_make_imap(char *buf, size_t buflen, time_t timestamp)
 {
-  struct tm tm = mutt_date_localtime_r(&timestamp);
+  struct tm tm = mutt_date_localtime_r(timestamp);
   time_t tz = mutt_date_local_tz(timestamp);
 
   tz /= 60;
@@ -619,7 +619,7 @@ int mutt_date_make_imap(char *buf, size_t buflen, time_t timestamp)
  */
 int mutt_date_make_tls(char *buf, size_t buflen, time_t timestamp)
 {
-  struct tm tm = mutt_date_gmtime_r(&timestamp);
+  struct tm tm = mutt_date_gmtime_r(timestamp);
   return snprintf(buf, buflen, "%s, %d %s %d %02d:%02d:%02d UTC",
                   Weekdays[tm.tm_wday], tm.tm_mday, Months[tm.tm_mon],
                   tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
@@ -702,10 +702,10 @@ time_t mutt_date_add_timeout(time_t now, long timeout)
  * @param timep Time
  * @retval tm   Broken-down time representation
  */
-struct tm mutt_date_localtime_r(const time_t *timep)
+struct tm mutt_date_localtime_r(time_t timep)
 {
   struct tm tm = { 0 };
-  localtime_r(timep, &tm);
+  localtime_r(&timep, &tm);
   
   return tm;
 }
@@ -715,10 +715,54 @@ struct tm mutt_date_localtime_r(const time_t *timep)
  * @param timep Time
  * @retval tm   Broken-down time representation
  */
-struct tm mutt_date_gmtime_r(const time_t *timep)
+struct tm mutt_date_gmtime_r(time_t timep)
 {
   struct tm tm = { 0 };
-  gmtime_r(timep, &tm);
+  gmtime_r(&timep, &tm);
 
   return tm;
+}
+
+/**
+ * mutt_date_get_localtime - Get current localtime.
+ * @retval tm Broken-down time representation
+ */
+struct tm mutt_date_get_localtime(void)
+{
+  time_t t = time(NULL);
+  return mutt_date_localtime_r(t);
+}
+
+/**
+ * mutt_date_get_gmtime - Get current gmtime.
+ * @retval tm Broken-down time representation
+ */
+struct tm mutt_date_get_gmtime(void)
+{
+  time_t t = time(NULL);
+  return mutt_date_gmtime_r(t);
+}
+
+/**
+ * mutt_date_format_localtime - Format localtime
+ * @param time   Time to format
+ * @param str    String to store formated time
+ * @param format Format to apply
+ */
+void mutt_date_format_localtime(time_t time, char *str, char *format)
+{
+  struct tm tm = mutt_date_localtime_r(time);
+  strftime(str, strlen(str), format, &tm);
+}
+
+/**
+ * mutt_date_format_gmtime - Format gmtime
+ * @param time   Time to format
+ * @param str    String to store formated time
+ * @param format Format to apply
+ */
+void mutt_date_format_gmtime(time_t time, char *str, char *format)
+{
+  struct tm tm = mutt_date_gmtime_r(time);
+  strftime(str, strlen(str), format, &tm);
 }

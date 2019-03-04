@@ -88,7 +88,7 @@ void crypt_current_time(struct State *s, const char *app_name)
   if (C_CryptTimestamp)
   {
     t = time(NULL);
-    struct tm tm = mutt_date_localtime_r(&t);
+    struct tm tm = mutt_date_localtime_r(t);
     strftime(p, sizeof(p), _(" (current time: %c)"), &tm);
   }
   else
